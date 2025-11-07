@@ -1,0 +1,33 @@
+CS358 Assignment 2 - Summary Report
+Son Phan
+
+Status of Programs
+------------------
+Both relex.py and stmt.py have been successfully implemented.
+
+For relex.py:
+The interpreters for relational expressions now correctly support chained comparisons using both C and Python semantics. After adjusting the grammar to make the relational operator a token (ROP), the parsing became stable, and chained comparisons such as:
+    1 < 2 < 3
+    3 < 2 < 1
+    1 == 1 != 2
+now evaluate correctly. EvalC() produces integer results (1 or 0), while EvalP() produces Boolean values (True or False) consistent with Python semantics.
+
+For stmt.py:
+The interpreter correctly handles assignment, if/else, while, print, and block statements. A single global environment stores all variable values, initialized to zero by default. Because the grammar does not include relational operators (like <, <=, >, ==), program conditions must be expressed using arithmetic expressions where 0 means false and non-zero means true. 
+
+Both sample programs run correctly after adjustments:
+- sum.st computes and prints the sum of numbers 1 to 100 using arithmetic conditions (no relational operators).
+- skip.st prints numbers from n down to 1, skipping k, using while loops and arithmetic expressions.
+
+Example outputs:
+    python stmt.py sum.st  → 5050
+    python stmt.py skip.st → 4  2  1
+
+Experience and Lessons Learned
+------------------------------
+The most challenging part of the RelEx interpreter was implementing Python-style chained comparisons. This required inspecting the AST structure, detecting when the left operand was another comparison, and manually evaluating overlapping expressions. Converting the operator rule to a token resolved parsing consistency issues.
+
+For the statement interpreter, the biggest issue was realizing that relational operators are not part of the grammar. I initially wrote while (i <= 100), which caused parsing errors. Rewriting conditions to use arithmetic-only expressions, such as `while (i - 101)`, allowed loops and if-statements to function properly. This clarified the difference between syntactic capability and semantic meaning in interpreter design.
+
+Overall, this assignment improved my understanding of how grammar design directly affects language semantics and interpreter behavior. It also reinforced the importance of testing both grammar and evaluation rules systematically.
+
